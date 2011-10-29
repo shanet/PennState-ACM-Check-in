@@ -1,0 +1,44 @@
+Setup
+==========
+
+All the check-in script is is a Python script. Thus, to run it just do 'python checkin.py'. One caveat: you must have the
+MySQLdb Python module installed. If you do not, the script will tell you and refuse to run.
+
+Also, you will need to change the "dbHost", "dbUser", and "dbTable" variables at the top of the script to values for your
+database.
+
+Finally, the whole script is pointless without a card reader. Since it was built for a card read that uses keyboard
+emulation you could just type the card info in, but without a card reader you have no way of knowing what that
+info is!
+
+
+Usage
+==========
+
+Usage is very straightforward. Simply run 'python checkin.py' and follow the prompts. Enter "back" at any time to
+go up a menu level.
+
+The database fields the script expects are as follows:
+"cardID" varchar, primary key
+"accessID varchar
+"points" int
+"lastCheckin" timestamp
+
+Make sure that your database is setup appropriately.
+
+On the first run you will want to populate your database. The easiest way to do this is to select the "Add Card" menu
+option. You can then add a single card or add multiple cards until "back" is entered to go back to the main menu.
+
+You can also select the check-in option and if a card doesn't exist in the database you will be prompted to add it. This
+is, however, slower than just uses the "Add Card" option.
+
+After your database is populated you can use the "Show Points" option to show a single user's points or view a pretty
+table of all users in descending order from most to least points.
+
+
+Contact
+==========
+
+Programmer: Shane Tully
+Email: shanet@psu.edu
+Website: shanetully.com and psu-acm.org
