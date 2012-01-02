@@ -20,9 +20,9 @@ except ImportError:
 DEFAULT_POINT_VALUE = 50
 
 # Globals
-dbHost = "psu-acm.org"
-dbUser = "psuacmor_points"
-dbTable = "psuacmor_points"
+dbHost = "acm.psu.edu"
+dbUser = "points"
+dbTable = "points"
 
 
 def connectToDatabase(dbPass=""):
