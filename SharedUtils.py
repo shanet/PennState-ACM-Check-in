@@ -1,3 +1,8 @@
+# Shane Tully
+# 09.18.11
+# Magnetic card check-in application for Penn State ACM
+
+
 # Even though MySQLdb performs input sanitization internally, 
 # it doesn't hurt to do it oursevles just to be on the safe side
 def sanitizeInput(input):
