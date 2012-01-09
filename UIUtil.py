@@ -233,6 +233,13 @@ class MainWnd(QMainWindow):
             self.cardInput += event.text()
 
 
+   def closeEvent(self, closeEvent):
+      print "Cleaning up and exiting..."
+      if self.db is not None:
+         self.db.close()
+      closeEvent.accept();
+
+
    def initMainMenuWidget(self):
       self.mainMenuWidget = QWidget()
 
@@ -249,7 +256,7 @@ class MainWnd(QMainWindow):
       # Define button callbacks
       self.checkinBtn.clicked.connect(self.showCheckinWidget)
       self.showPointsBtn.clicked.connect(self.showShowPointsWidget)
-      self.exitBtn.clicked.connect(QCoreApplication.instance().quit)
+      self.exitBtn.clicked.connect(self.close)
 
       # Configure the grid layout
       grid = QGridLayout()

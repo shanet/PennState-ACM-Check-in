@@ -16,39 +16,30 @@ import DBUtil
 def main(args):
    print "Penn State ACM Check-in System Version" , c.VERSION
 
-   try:
-      # Init textMode
-      textMode = 0
+   # Init textMode
+   textMode = 0
 
-      # Check if text mode was requested
-      if len(args) > 1:
-         arg = args[1].lower()
-         if arg == "--help":
-            showHelp()
-            sys.exit(0)
-         elif arg == "--version":
-            showVersion()
-            sys.exit(0)
-         elif arg == "--nogui":
-            textMode = 1
-         else:
-            print "Invalid argument: ", args[1]
-
-      if textMode == 0:
-         global app
-         app = UI(args)
-         app.exec_()
+   # Process the arguments
+   if len(args) > 1:
+      arg = args[1].lower()
+      if arg == "--help":
+         showHelp()
+         sys.exit(0)
+      elif arg == "--version":
+         showVersion()
+         sys.exit(0)
+      elif arg == "--nogui":
+         textMode = 1
       else:
-         TextUI().start()
+         print "Invalid argument:", args[1]
 
-   # TODO: keyboard interrupt handling should be moved to textUI and UI classes
-
-   # Catch keyboard interuppts so that the db connection may be closed
-   # in cleanUp function
-   except KeyboardInterrupt:
-      pass
-   finally:
-      pass
+   # Start the program into either textmode or GUI mode
+   if textMode == 0:
+      global app
+      app = UI(args)
+      app.exec_()
+   else:
+      TextUI().start()
 
    # Exit normally
    sys.exit(0)

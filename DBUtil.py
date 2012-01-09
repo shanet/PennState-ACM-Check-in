@@ -120,12 +120,6 @@ class DB:
       # Only check the dates if this is not the case
       if lastCheckin and datetime.date(curDate) == datetime.date(lastCheckin):
          tmzAdjust = 0
-         """# The DB server is on mountain time. Adjust the local time (eastern),to mountain
-         if datetime.time(curDate).hour == 1 or datetime.time(curDate).hour == 0:
-            tmzAdjust = 22
-         else:
-            tmzAdjust = -2
-         """
          
          # Check that the current system time is at least one hour greater than the last check-in time
          if (datetime.time(curDate).hour+tmzAdjust == datetime.time(lastCheckin).hour or

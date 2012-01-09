@@ -12,34 +12,43 @@ import Constants as c
 
 class TextUI:
    def __init__(self):
-      pass
+      self.db = None
+
 
    def start(self):
       # Compile the regex for pulling the card ID from all the data on a card
       # Do this here so it isn't done multiple times in the functions below
       self.regex = re.compile(";(.+)=")
 
-      while 1:
-         # Get DB info
-         self.getDbInfo()
+      try:
+         while 1:
+            # Get DB info
+            self.getDbInfo()
 
-         # Create the DB object
-         self.db = DbUtil(self.dbHost, c.DEFAULT_TABLE, self.dbUser, self.dbPass)
+            # Create the DB object
+            self.db = DB(self.dbHost, c.DEFAULT_TABLE, self.dbUser, self.dbPass)
 
-         # Connect to the database
-         connectStatus = self.connectToDatabase()
+            # Connect to the database
+            connectStatus = self.connectToDatabase()
 
-         # If we failed to connect to the database offer to re-enter db info
-         if connectStatus != c.SUCCESS:
-            reenter = raw_input("Failed to connect to database. Re-enter database info? (Y,n) ")
-            if reenter.lower() == "n":
-               print "Bye."
-               sys.exit(0)
-         else:
-            break
+            # If we failed to connect to the database offer to re-enter db info
+            if connectStatus != c.SUCCESS:
+               reenter = raw_input("Failed to connect to database. Re-enter database info? (Y,n) ")
+               if reenter.lower() == "n":
+                  print "Bye."
+                  sys.exit(0)
+            else:
+               break
 
+         # Start the main menu loop
+         self.displayMenu()
 
-      self.displayMenu()
+      except KeyboardInterrupt:
+         pass
+      finally:
+         print "Ctrl+C caught. Cleaning up and exiting..."
+         if self.db is not None:
+            self.db.close()
 
 
    def displayMenu(self):
