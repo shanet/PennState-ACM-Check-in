@@ -1,8 +1,16 @@
-Version 1.5:
-- Added support for timestamps (can only check-in once per hour)
-- Added error handling if user doesn't exist in database but still tries to check-in
-- Sanatized database inputs
-- Refactored some code
+Version 3.0:
+   - Added a GUI via PyQt
+   - Preserved the old text interface with a textmode that can be used with the "--nogui" argument
+   - Heaps of little things here and there. This is basically a complete OOP rewrite of the application
 
-Version 1:
-- Inital release! :D
+Version 2.0:
+   - Honestly, a bunch of stuff that wasn't listed here and is now forgotten about
+
+Version 1.5:
+   - Added support for timestamps (can only check-in once per hour)
+   - Added error handling if user doesn't exist in database but still tries to check-in
+   - Sanatized database inputs
+   - Refactored some code
+
+Version 1.0:
+   - Inital release! :D

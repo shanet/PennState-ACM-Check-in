@@ -13,7 +13,7 @@ import Constants as c
 try:
    import MySQLdb
 except ImportError:
-   print "This script requires the MySQLdb module to be installed. Exiting."
+   print "This program requires the MySQLdb module to be installed. Exiting."
    sys.exit(1) 
 
 

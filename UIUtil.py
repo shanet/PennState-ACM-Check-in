@@ -4,8 +4,13 @@
 
 import sys
 import re
-from PyQt4.Qt import *
-import MySQLdb
+
+# PyQt must be available
+try:
+   from PyQt4.Qt import *
+except ImportError:
+   print "This program requires the PyQt module to be installed. Exiting."
+   sys.exit(1) 
 
 from DBUtil import DB
 from Threads import *
