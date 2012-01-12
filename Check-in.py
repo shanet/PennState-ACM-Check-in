@@ -10,7 +10,7 @@ import sys
 try:
    from PyQt4.Qt import *
 except ImportError:
-   print "This program requires the PyQt module to be installed. Exiting."
+   print "This program requires the PyQt module to be installed. \nOn Ubuntu-based distros the package is \"python-qt4\". Exiting."
    sys.exit(1)
 
 from UIUtil import UI
