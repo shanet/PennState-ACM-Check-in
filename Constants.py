@@ -6,7 +6,7 @@
 
 # Behavoiral constants
 VERSION = 3.0
-DEFAULT_TABLE = "points"
+DEFAULT_TABLE = "points_spring_12"
 DEFAULT_POINTS = 50
 ALLOW_CHECKIN_WITHIN_HOUR = 1
 
