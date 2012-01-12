@@ -26,7 +26,7 @@ class TextUI:
             self.getDbInfo()
 
             # Create the DB object
-            self.db = DB(self.dbHost, c.DEFAULT_TABLE, self.dbUser, self.dbPass)
+            self.db = DB(self.dbHost, c.DEFAULT_DATABASE, self.dbUser, self.dbPass)
 
             # Connect to the database
             connectStatus = self.connectToDatabase()

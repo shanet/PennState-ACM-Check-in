@@ -55,7 +55,7 @@ class DB:
       
       try:
          # Add the new record into the DB
-         cursor.execute("""INSERT INTO points (cardID, accessID, points) values (\'%s\', \'%s\', %s);""" % (cardID, accessID, initialPoints))
+         cursor.execute("""INSERT INTO""" , c.DEFAULT_TABLE , """(cardID, accessID, points) values (\'%s\', \'%s\', %s);""" % (cardID, accessID, initialPoints))
          status = c.SUCCESS
       except MySQLdb.Error, e:
          status = c.SQL_ERROR
@@ -76,7 +76,7 @@ class DB:
 
       try:
          # Get the last check-in time
-         cursor.execute("""SELECT last_checkin FROM points WHERE cardID=\'%s\';""" % (cardID))
+         cursor.execute("""SELECT last_checkin FROM \'""" + c.DEFAULT_TABLE + """\' WHERE cardID=\'%s\';""" % (cardID))
 
          # Ensure that the card is in the database
          if cursor.rowcount == 0:
@@ -95,16 +95,17 @@ class DB:
 
          if status == c.SUCCESS:
             # Update the database with the new points         
-            cursor.execute("""UPDATE points SET points=points+%s WHERE cardID=\'%s\';""" % (pointValue, cardID))
+            cursor.execute("""UPDATE \'""" + c.DEFAULT_TABLE + """\' SET points=points+%s WHERE cardID=\'%s\';""" % (pointValue, cardID))
 
             # Grab the access ID that just checked-in to print confirmation
-            cursor.execute("""SELECT accessID FROM points WHERE cardID=\'%s\';""" % (cardID))
+            cursor.execute("""SELECT accessID FROM \'""" + c.DEFAULT_TABLE + """\' WHERE cardID=\'%s\';""" % (cardID))
 
             accessID = cursor.fetchone()[0]
       except MySQLdb.Error, e:
          status = c.SQL_ERROR
          sqlError = e
       except Exception, e:
+         print e
          pass
       finally:
          cursor.close()
@@ -147,9 +148,9 @@ class DB:
       try:
          # Either get all access ID's and points from DB or just one access ID
          if accessID == "":
-            cursor.execute("""SELECT accessID, points FROM points ORDER BY points DESC;""")
+            cursor.execute("""SELECT accessID, points FROM""" , c.DEFAULT_TABLE , """ORDER BY points DESC;""")
          else:
-            cursor.execute("""SELECT points FROM points WHERE accessID=\'%s\';""" % (accessID))
+            cursor.execute("""SELECT points FROM""" , c.DEFAULT_TABLE , """WHERE accessID=\'%s\';""" % (accessID))
 
          # Show error if no results (access ID is not in database)
          if cursor.rowcount == 0:

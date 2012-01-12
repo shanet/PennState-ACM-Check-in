@@ -137,7 +137,7 @@ class LoginWnd(QMainWindow):
       self.connWnd.show()
 
       # Create a new dbUtil object and have it connect to the database
-      self.loginThread = LoginThread(dbHost, c.DEFAULT_TABLE, dbUser, dbPass)
+      self.loginThread = LoginThread(dbHost, c.DEFAULT_DATABASE, dbUser, dbPass)
 
       self.connect(self.loginThread, SIGNAL("postLogin(PyQt_PyObject, PyQt_PyObject)"), self.postLogin)
 
