@@ -1,4 +1,4 @@
-#! python
+#!/usr/bin/env python
 
 # Shane Tully
 # 09.18.11
