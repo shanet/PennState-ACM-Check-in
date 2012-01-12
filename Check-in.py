@@ -1,11 +1,17 @@
-#! /usr/bin/python2.7
+#! python
 
 # Shane Tully
 # 09.18.11
 # Magnetic card check-in application for Penn State ACM
 
 import sys
-from PyQt4 import QtGui
+
+# PyQt must be available
+try:
+   from PyQt4.Qt import *
+except ImportError:
+   print "This program requires the PyQt module to be installed. Exiting."
+   sys.exit(1)
 
 from UIUtil import UI
 from TextUtil import TextUI

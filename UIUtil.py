@@ -4,13 +4,7 @@
 
 import sys
 import re
-
-# PyQt must be available
-try:
-   from PyQt4.Qt import *
-except ImportError:
-   print "This program requires the PyQt module to be installed. Exiting."
-   sys.exit(1) 
+from PyQt4.Qt import *
 
 from DBUtil import DB
 from Threads import *
