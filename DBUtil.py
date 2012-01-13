@@ -13,13 +13,16 @@ import Constants as c
 try:
    import MySQLdb
 except ImportError:
-   print "This program requires the MySQLdb module to be installed. Exiting."
+   print ("This program requires the MySQLdb module to be installed. "
+          "\nOn Ubuntu-based distros the package is \"python-mysqldb\". Exiting.")
    sys.exit(1) 
 
 
 class DB:
-   def __init__(self, dbHost, dbTable, dbUser, dbPass):
+   def __init__(self, dbHost, dbDatabase, dbTable, dbUser, dbPass):
+      self.dbConn = None
       self.dbHost = dbHost
+      self.dbDatabase = dbDatabase
       self.dbTable = dbTable
       self.dbUser = dbUser
       self.dbPass = dbPass
@@ -31,7 +34,7 @@ class DB:
 
       try:
          # Connect to the database server
-         self.dbConn = MySQLdb.connect(host=self.dbHost, user=self.dbUser, passwd=self.dbPass, db=self.dbTable)
+         self.dbConn = MySQLdb.connect(host=self.dbHost, user=self.dbUser, passwd=self.dbPass, db=self.dbDatabase)
          return c.SUCCESS
       except MySQLdb.Error, e:
          # Bad password error
@@ -43,7 +46,8 @@ class DB:
 
 
    def close(self):
-      self.dbConn.close()
+      if self.dbConn is not None:
+         self.dbConn.close()
 
 
    def addCard(self, cardID, accessID, initialPoints):
@@ -55,7 +59,7 @@ class DB:
       
       try:
          # Add the new record into the DB
-         cursor.execute("""INSERT INTO""" , c.DEFAULT_TABLE , """(cardID, accessID, points) values (\'%s\', \'%s\', %s);""" % (cardID, accessID, initialPoints))
+         cursor.execute("""INSERT INTO %s (cardID, accessID, points) values (\'%s\', \'%s\', %s);""" % (self.dbTable, cardID, accessID, initialPoints))
          status = c.SUCCESS
       except MySQLdb.Error, e:
          status = c.SQL_ERROR
@@ -68,6 +72,7 @@ class DB:
 
    def checkin(self, cardID, pointValue):
       # Init some stuff that could cause problems if not initialized
+      status = c.FAILURE
       accessID = None
       sqlError = None
 
@@ -76,7 +81,7 @@ class DB:
 
       try:
          # Get the last check-in time
-         cursor.execute("""SELECT last_checkin FROM \'""" + c.DEFAULT_TABLE + """\' WHERE cardID=\'%s\';""" % (cardID))
+         cursor.execute("""SELECT last_checkin FROM %s WHERE cardID=\'%s\';""" % (self.dbTable, cardID))
 
          # Ensure that the card is in the database
          if cursor.rowcount == 0:
@@ -95,10 +100,10 @@ class DB:
 
          if status == c.SUCCESS:
             # Update the database with the new points         
-            cursor.execute("""UPDATE \'""" + c.DEFAULT_TABLE + """\' SET points=points+%s WHERE cardID=\'%s\';""" % (pointValue, cardID))
+            cursor.execute("""UPDATE %s SET points=points+%s WHERE cardID=\'%s\';""" % (self.dbTable, pointValue, cardID))
 
             # Grab the access ID that just checked-in to print confirmation
-            cursor.execute("""SELECT accessID FROM \'""" + c.DEFAULT_TABLE + """\' WHERE cardID=\'%s\';""" % (cardID))
+            cursor.execute("""SELECT accessID FROM %s WHERE cardID=\'%s\';""" % (self.dbTable, cardID))
 
             accessID = cursor.fetchone()[0]
       except MySQLdb.Error, e:
@@ -148,9 +153,9 @@ class DB:
       try:
          # Either get all access ID's and points from DB or just one access ID
          if accessID == "":
-            cursor.execute("""SELECT accessID, points FROM""" , c.DEFAULT_TABLE , """ORDER BY points DESC;""")
+            cursor.execute("""SELECT accessID, points FROM %s ORDER BY points DESC;""" % (self.dbTable))
          else:
-            cursor.execute("""SELECT points FROM""" , c.DEFAULT_TABLE , """WHERE accessID=\'%s\';""" % (accessID))
+            cursor.execute("""SELECT points FROM %s WHERE accessID=\'%s\';""" % (self.dbTable, accessID))
 
          # Show error if no results (access ID is not in database)
          if cursor.rowcount == 0:

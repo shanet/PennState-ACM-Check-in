@@ -26,7 +26,7 @@ class TextUI:
             self.getDbInfo()
 
             # Create the DB object
-            self.db = DB(self.dbHost, c.DEFAULT_DATABASE, self.dbUser, self.dbPass)
+            self.db = DB(self.dbHost, c.DEFAULT_DATABASE, self.dbTable, self.dbUser, self.dbPass)
 
             # Connect to the database
             connectStatus = self.connectToDatabase()
@@ -46,7 +46,7 @@ class TextUI:
       except KeyboardInterrupt:
          pass
       finally:
-         print "Ctrl+C caught. Cleaning up and exiting..."
+         print "Cleaning up and exiting..."
          if self.db is not None:
             self.db.close()
 
@@ -199,21 +199,20 @@ class TextUI:
 
 
    def getDbInfo(self):
-      while 1:
-         self.dbHost = raw_input("Database host: ")
+      self.dbHost = raw_input("Database host: (" + c.DEFAULT_HOST + ") ")
 
-         if self.dbHost == "":
-            print "Database host cannot be blank."
-         else:
-            break
+      if self.dbHost == "":
+         self.dbHost = c.DEFAULT_HOST
 
-      while 1:
-         self.dbUser = raw_input("Database Username: ")
+      self.dbTable = raw_input("Database table: (" + c.DEFAULT_TABLE + ") ")
 
-         if self.dbUser == "":
-            print "Database user cannot be blank."
-         else:
-            break
+      if self.dbTable == "":
+         self.dbTable = c.DEFAULT_TABLE
+
+      self.dbUser = raw_input("Database Username: (" + c.DEFAULT_USER + ") ")
+
+      if self.dbUser == "":
+         self.dbUser = c.DEFAULT_USER
 
       while 1:
          self.dbPass = getpass.getpass("Database Password: ")
@@ -228,7 +227,7 @@ class TextUI:
       print "%s +%s points" % (accessID, pointValue)
 
 
-   def showDatabaseError(error):
+   def showDatabaseError(self, error):
       print "\nWARNING! Database error:\n%s" % (error.args[1])
 
 

@@ -41,6 +41,10 @@ class LoginWnd(QMainWindow):
       self.hostLabel = QLabel("Host:", self)
       self.hostEdit = QLineEdit("acm.psu.edu", self)
 
+      # Create table label and table edit
+      self.tableLabel = QLabel("Table:", self)
+      self.tableEdit = QLineEdit("points_spring_12", self)
+
       # Create username label and text edit
       self.userLabel = QLabel("Username:", self)
       self.userEdit = QLineEdit("points", self)
@@ -72,17 +76,21 @@ class LoginWnd(QMainWindow):
       grid.addWidget(self.hostLabel, 0, 0)
       grid.addWidget(self.hostEdit, 0, 1)
 
+      # Add table widgets
+      grid.addWidget(self.tableLabel, 1, 0)
+      grid.addWidget(self.tableEdit, 1, 1)
+
       # Add username widgets
-      grid.addWidget(self.userLabel, 1, 0)
-      grid.addWidget(self.userEdit, 1, 1)
+      grid.addWidget(self.userLabel, 2, 0)
+      grid.addWidget(self.userEdit, 2, 1)
 
       # Add password widgets
-      grid.addWidget(self.passLabel, 2, 0)
-      grid.addWidget(self.passEdit, 2, 1)
+      grid.addWidget(self.passLabel, 3, 0)
+      grid.addWidget(self.passEdit, 3, 1)
 
       # Add login and exit buttons
-      grid.addWidget(self.exitBtn, 3, 0)
-      grid.addWidget(self.loginBtn, 3, 1)
+      grid.addWidget(self.exitBtn, 4, 0)
+      grid.addWidget(self.loginBtn, 4, 1)
 
       # Add grid to the hbox layout for horizontal centering
       hbox = QHBoxLayout()
@@ -118,12 +126,16 @@ class LoginWnd(QMainWindow):
 
    def preLogin(self):
       dbHost = str(self.hostEdit.text())
+      dbTable = str(self.tableEdit.text())
       dbUser = str(self.userEdit.text())
       dbPass = str(self.passEdit.text())
 
       # Check if user or pass are empty
       if dbHost == "":
          QMessageBox.warning(self, "Error", "Host field cannot be empty", QMessageBox.Ok, QMessageBox.Ok)
+         return
+      elif dbTable == "":
+         QMessageBox.warning(self, "Error", "Table field cannot be empty", QMessageBox.Ok, QMessageBox.Ok)
          return
       elif dbUser == "":
          QMessageBox.warning(self, "Error", "User field cannot be empty", QMessageBox.Ok, QMessageBox.Ok)
@@ -137,7 +149,7 @@ class LoginWnd(QMainWindow):
       self.connWnd.show()
 
       # Create a new dbUtil object and have it connect to the database
-      self.loginThread = LoginThread(dbHost, c.DEFAULT_DATABASE, dbUser, dbPass)
+      self.loginThread = LoginThread(dbHost, c.DEFAULT_DATABASE, dbTable, dbUser, dbPass)
 
       self.connect(self.loginThread, SIGNAL("postLogin(PyQt_PyObject, PyQt_PyObject)"), self.postLogin)
 
@@ -341,6 +353,8 @@ class MainWnd(QMainWindow):
    def initShowPointsWidget(self):
       self.showPointsWidget = QWidget()
 
+      self.checkinThread = None
+
       # Init widgets
       self.pointsTitle = QLabel("Current Points Standings")
       self.pointsScrollArea = QScrollArea()
@@ -448,7 +462,8 @@ class MainWnd(QMainWindow):
 
    def closeCheckinScreen(self):
       # End the checkin thread we started
-      self.checkinThread.terminate()
+      if self.checkinThread is not None:
+            self.checkinThread.terminate()
 
       self.showMainMenuWidget()
 

@@ -1,4 +1,10 @@
-Version 3.0:
+Version 3.1-beta:
+   - Differentiated between database and table names
+   - Added table field on login screen
+   - Improved module import error handling
+   - Updated README
+
+Version 3.0-beta:
    - Added a GUI via PyQt
    - Preserved the old text interface with a textmode that can be used with the "--nogui" argument
    - Heaps of little things here and there. This is basically a complete OOP rewrite of the application

@@ -5,9 +5,12 @@
 # All application-wide constants
 
 # Behavoiral constants
-VERSION = 3.0
+VERSION = "3.0-beta"
+
+DEFAULT_HOST = "acm.psu.edu"
+DEFAULT_USER = "points"
 DEFAULT_DATABASE = "points"
-DEFAULT_TABLE = "points-spring-12"
+DEFAULT_TABLE = "points_spring_12"
 DEFAULT_POINTS = 50
 ALLOW_CHECKIN_WITHIN_HOUR = 1
 

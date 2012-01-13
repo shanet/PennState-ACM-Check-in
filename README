@@ -1,44 +1,55 @@
-Setup
+SETUP
 ==========
 
-All the check-in script is is a Python script. Thus, to run it just do 'python checkin.py'. One caveat: you must have the
-MySQLdb Python module installed. If you do not, the script will tell you and refuse to run.
+The Penn State ACM Check-in application is built on Python. 
+There are two dependencies:
+   1.) PyQt - Python bindings for QT   (Package for Ubuntu-based systems: "python-qt4")
+   2.) MySQLdb - Python MySQL library  (Package for Ubuntu-based systems: "python-mysqldb")
 
-Also, you will need to change the "dbHost", "dbUser", and "dbTable" variables at the top of the script to values for your
-database.
+Once the dependencies are met, run it with "./Check-in.py".
 
-Finally, the whole script is pointless without a card reader. Since it was built for a card read that uses keyboard
-emulation you could just type the card info in, but without a card reader you have no way of knowing what that
-info is!
+To actaully use it, however, you will need a database server (either a remote server or hosted locally).
+The default host, database, table, and host are configurable in the Constants.py file or are able to
+be entered in the login screen of the application.
+
+For the database, this application expects a table with four columns:
+   1.) card ID        - card ID from ID card (varchar, primary key)
+   2.) access ID      - human-readable owner of card (varchar)
+   3.) points         - the number of points (int)
+   4.) last check-in  - the time of last check-in (timestamp)
+
+Finally, the whole script is pointless without a card reader. This application was built for a card read that 
+uses keyboard emulation. Hence, you could just type the card info in, but without a card reader you have no way of 
+knowing what that info is!
 
 
-Usage
+USAGE
 ==========
 
-Usage is very straightforward. Simply run 'python checkin.py' and follow the prompts. Enter "back" at any time to
-go up a menu level.
+Usage is very straightforward. Simply run "./Check-in.py" to start the GUI.
 
-The database fields the script expects are as follows:
-"cardID" varchar, primary key
-"accessID varchar
-"points" int
-"lastCheckin" timestamp
+There is also a text-only mode. This can be started by using the "--nogui" argument.
+In text mode, enter "back" at any time to go up a menu level or exit the check-in loop.
 
-Make sure that your database is setup appropriately.
-
-On the first run you will want to populate your database. The easiest way to do this is to select the "Add Card" menu
-option. You can then add a single card or add multiple cards until "back" is entered to go back to the main menu.
-
-You can also select the check-in option and if a card doesn't exist in the database you will be prompted to add it. This
-is, however, slower than just uses the "Add Card" option.
+To populate your database, select the check-in option and if a card doesn't exist in the database 
+you will be prompted to add it.
 
 After your database is populated you can use the "Show Points" option to show a single user's points or view a pretty
 table of all users in descending order from most to least points.
 
+Note that, by default, a card is only allowed to check-in once per hour to prevent abuse. This can
+be disabled by setting "ALLOW_CHECKIN_WITHIN_HOUR" to 0 in Constants.py.
 
-Contact
+
+LICENSE
+==========
+
+This application is open source software. Do whatever you want with it. How's that for a license?
+
+
+CONTACT
 ==========
 
 Programmer: Shane Tully
 Email: shanet@psu.edu
-Website: shanetully.com and psu-acm.org
+Website: shanetully.com and acm.psu.edu

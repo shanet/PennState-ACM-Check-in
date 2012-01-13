@@ -10,9 +10,10 @@ import Constants as c
 
 
 class LoginThread(QThread):
-   def __init__(self, dbHost, dbTable, dbUser, dbPass):
+   def __init__(self, dbHost, dbDatabase, dbTable, dbUser, dbPass):
       super(LoginThread, self).__init__()
       self.dbHost = dbHost
+      self.dbDatabase = dbDatabase
       self.dbTable = dbTable
       self.dbUser = dbUser
       self.dbPass = dbPass
@@ -20,7 +21,7 @@ class LoginThread(QThread):
    
    def run(self):
       # Init the db object
-      db = DB(self.dbHost, self.dbTable, self.dbUser, self.dbPass)
+      db = DB(self.dbHost, self.dbDatabase, self.dbTable, self.dbUser, self.dbPass)
 
       # Connect to the remote database server
       loginStatus = db.connect()
