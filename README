@@ -6,6 +6,10 @@ There are two dependencies:
    1.) PyQt - Python bindings for QT   (Package for Ubuntu-based systems: "python-qt4")
    2.) MySQLdb - Python MySQL library  (Package for Ubuntu-based systems: "python-mysqldb")
 
+It has been reported that this application runs on Windows with the Windows versions of the two libraries listed above,
+but Windows support is not taken into consideration during development. Thus, no guarentees for Windows support are made.
+Please don't bug me with requests for Windows support. Use a real OS like Linux.
+
 Once the dependencies are met, run it with "./Check-in.py".
 
 To actaully use it, however, you will need a database server (either a remote server or hosted locally).
@@ -17,6 +21,8 @@ For the database, this application expects a table with four columns:
    2.) access ID      - human-readable owner of card (varchar)
    3.) points         - the number of points (int)
    4.) last check-in  - the time of last check-in (timestamp)
+
+You'll probably want to change the default database information for your database in Constants.py.
 
 Finally, the whole script is pointless without a card reader. This application was built for a card read that 
 uses keyboard emulation. Hence, you could just type the card info in, but without a card reader you have no way of 
