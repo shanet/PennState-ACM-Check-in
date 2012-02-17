@@ -155,7 +155,7 @@ class DB:
          if accessID == "":
             cursor.execute("""SELECT accessID, points FROM %s ORDER BY points DESC;""" % (self.dbTable))
          else:
-            cursor.execute("""SELECT points FROM %s WHERE accessID=\'%s\';""" % (self.dbTable, accessID))
+            cursor.execute("""SELECT accessID, points FROM %s WHERE accessID=\'%s\';""" % (self.dbTable, accessID))
 
          # Show error if no results (access ID is not in database)
          if cursor.rowcount == 0:

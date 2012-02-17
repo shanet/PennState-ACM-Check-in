@@ -187,6 +187,9 @@ class MainWnd(QMainWindow):
       # Compile the regex for pulling the card ID from all the data on a card
       self.regex = re.compile(";(.+)=")
 
+      # Declare sleepThread
+      self.sleepThread = SleepThread(c.TIME_BETWEEN_CHECKINS)
+
       self.initUI()
 
         
@@ -235,7 +238,8 @@ class MainWnd(QMainWindow):
 
             # Set the card ID and start the checkin thread
             # cardID is going into an SQL query; don't forget to sanitize the input
-            if not self.checkinThread.isRunning():
+            if not (self.checkinThread.isRunning() and self.sleepThread.isRunning()):
+                  print "starting new thread"
                   self.checkinThread.setCardID(SharedUtils.sanitizeInput(str(cardID)))
                   self.checkinThread.start()
 
@@ -515,8 +519,8 @@ class MainWnd(QMainWindow):
       self.checkinLabel.update()
 
       # Sleep for a few seconds before resetting the UI for the next card
+      # The number of seconds is defined in the constants file
       # This must be on a separate thread since blocking the UI thread is a big no-no
-      self.sleepThread = SleepThread(3)
       self.connect(self.sleepThread, SIGNAL("resetCheckinWidget()"), self.resetCheckinWidget)
       self.sleepThread.start()
       
@@ -533,6 +537,10 @@ class MainWnd(QMainWindow):
       accessIDs = ""
       points = ""
       
+      if showPointsStatus == c.NO_RESULTS:
+            QMessageBox.critical(self, "Empty Query", "The specified access ID was not found in the database", QMessageBox.Ok, QMessageBox.Ok)
+            return
+      print len(pointsTuple)
       for i in range(len(pointsTuple)):
          accessIDs += str(pointsTuple[i][0]) + "\n"
          points += "| " + str(pointsTuple[i][1]) + "\n"

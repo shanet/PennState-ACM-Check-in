@@ -5,7 +5,7 @@
 # All application-wide constants
 
 # Behavoiral constants
-VERSION = "3.0-beta"
+VERSION = "3.1-beta"
 
 DEFAULT_HOST = "acm.psu.edu"
 DEFAULT_USER = "points"
@@ -13,6 +13,7 @@ DEFAULT_DATABASE = "points"
 DEFAULT_TABLE = "points_spring_12"
 DEFAULT_POINTS = 50
 ALLOW_CHECKIN_WITHIN_HOUR = 1
+TIME_BETWEEN_CHECKINS = 3 # In seconds
 
 # TextUtil constants
 BACK = 10

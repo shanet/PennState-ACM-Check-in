@@ -18,6 +18,9 @@ class LoginThread(QThread):
       self.dbUser = dbUser
       self.dbPass = dbPass
 
+   def __del__(self):
+      # Stop the thread if it's being deleted, but still running
+      self.quit()
    
    def run(self):
       # Init the db object
@@ -36,6 +39,10 @@ class CheckinThread(QThread):
       self.db = db
       self.pointValue = str(pointValue)
       self.cardID = None
+
+   def __del__(self):
+      # Stop the thread if it's being deleted, but still running
+      self.quit()
 
    def setCardID(self, cardID):
       self.cardID = cardID
@@ -56,6 +63,10 @@ class AddCardThread(QThread):
       self.pointValue = str(pointValue)
       self.cardID = cardID
       self.accessID = accessID
+
+   def __del__(self):
+      # Stop the thread if it's being deleted, but still running
+      self.quit()
    
    def run(self):
       addCardResult = self.db.addCard(self.cardID, self.accessID, self.pointValue)
@@ -70,6 +81,10 @@ class ShowPointsThread(QThread):
 
       self.db = db
       self.accessID = accessID
+   
+   def __del__(self):
+      # Stop the thread if it's being deleted, but still running
+      self.quit()
 
    def setAccessID(self, accessID):
       self.accessID = accessID
@@ -85,6 +100,10 @@ class SleepThread(QThread):
       super(SleepThread, self).__init__()
 
       self.time = time
+
+   def __del__(self):
+      # Stop the thread if it's being deleted, but still running
+      self.quit()
 
    def setTime(self, time):
       self.time = time
