@@ -5,7 +5,7 @@
 # All application-wide constants
 
 # Behavoiral constants
-VERSION = "3.1-beta"
+VERSION = "3.1.5-beta"
 
 DEFAULT_HOST = "acm.psu.edu"
 DEFAULT_USER = "points"

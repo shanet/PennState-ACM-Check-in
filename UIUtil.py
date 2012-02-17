@@ -196,7 +196,7 @@ class MainWnd(QMainWindow):
    def initUI(self):
       # Center the window
       # setGeometry args are x, y, width, height
-      self.setGeometry(0, 0, 500, 100)
+      self.setGeometry(0, 0, 550, 100)
       geo = self.frameGeometry()
       centerPt = QDesktopWidget().availableGeometry().center()
       geo.moveCenter(centerPt)
@@ -239,9 +239,8 @@ class MainWnd(QMainWindow):
             # Set the card ID and start the checkin thread
             # cardID is going into an SQL query; don't forget to sanitize the input
             if not (self.checkinThread.isRunning() and self.sleepThread.isRunning()):
-                  print "starting new thread"
-                  self.checkinThread.setCardID(SharedUtils.sanitizeInput(str(cardID)))
-                  self.checkinThread.start()
+               self.checkinThread.setCardID(SharedUtils.sanitizeInput(str(cardID)))
+               self.checkinThread.start()
 
          except AttributeError:
             # If a match was not made append the current text to card input

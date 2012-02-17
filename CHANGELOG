@@ -1,3 +1,9 @@
+Version 3.1.5-beta:
+   - Added TIME_BETWEEN_CHECKINS constant in constants file
+   - Fixed seg fault when checking in multiple times within TIME_BETWEEN_CHECKINS
+   - Fixed no result being returned on showing a single user's points
+   - Increased the default main window width to 550px
+
 Version 3.1-beta:
    - Differentiated between database and table names
    - Added table field on login screen
