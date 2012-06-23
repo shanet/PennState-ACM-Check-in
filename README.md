@@ -1,5 +1,9 @@
-SETUP
-==========
+# Penn State ACM Check-in
+
+### Shane Tully (shane@shanetully.com)
+### shanetully.com & acm.psu.edu
+
+## Setup
 
 The Penn State ACM Check-in application is built on Python. 
 There are two dependencies:
@@ -29,8 +33,7 @@ uses keyboard emulation. Hence, you could just type the card info in, but withou
 knowing what that info is!
 
 
-USAGE
-==========
+## Usage
 
 Usage is very straightforward. Simply run "./Check-in.py" to start the GUI.
 
@@ -47,15 +50,15 @@ Note that, by default, a card is only allowed to check-in once per hour to preve
 be disabled by setting "ALLOW_CHECKIN_WITHIN_HOUR" to 0 in Constants.py.
 
 
-LICENSE
-==========
+## Support
+This program is a little side project and carries no warranty or support
+from its author. However, bugs and feature requests may be submitted to the GitHub repo
+linked to above.
 
-This application is open source software. Do whatever you want with it. How's that for a license?
 
-
-CONTACT
-==========
-
-Programmer: Shane Tully
-Email: shanet@psu.edu
-Website: shanetully.com and acm.psu.edu
+## Legal
+This program is open source software. It is free to distribute, modify, and use
+with the exception of it being made closed source and sold for commercial purposes
+without the consent of the author. However, the author simply requests that if you 
+do something cool with it, you let him check it out by emailing shane@shanetully.com 
+or just let him know you find it useful.
