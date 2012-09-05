@@ -43,7 +43,7 @@ class LoginWnd(QMainWindow):
 
       # Create table label and table edit
       self.tableLabel = QLabel("Table:", self)
-      self.tableEdit = QLineEdit("points_spring_12", self)
+      self.tableEdit = QLineEdit(c.DEFAULT_TABLE, self)
 
       # Create username label and text edit
       self.userLabel = QLabel("Username:", self)
