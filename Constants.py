@@ -7,13 +7,13 @@
 # Behavoiral constants
 VERSION = "3.1.5-beta"
 
-DEFAULT_HOST = "acm.psu.edu"
-DEFAULT_USER = "points"
-DEFAULT_DATABASE = "points"
-DEFAULT_TABLE = "points_fall_12"
-DEFAULT_POINTS = 50
+DEFAULT_HOST              = "acm.psu.edu"
+DEFAULT_USER              = "points"
+DEFAULT_DATABASE          = "points"
+DEFAULT_TABLE             = "points_spring_13"
+DEFAULT_POINTS            = 50
 ALLOW_CHECKIN_WITHIN_HOUR = 0
-TIME_BETWEEN_CHECKINS = 3 # In seconds
+TIME_BETWEEN_CHECKINS     = 3 # In seconds
 
 # TextUtil constants
 BACK = 10
@@ -29,8 +29,8 @@ BAD_PASSWD = 2
 ERROR_READING_CARD = 11
 
 # Database errors
-CARD_NOT_IN_DB = 3
-BAD_CHECKIN_TIME = 4
+CARD_NOT_IN_DB      = 3
+BAD_CHECKIN_TIME    = 4
 FUTURE_CHECKIN_TIME = 5
-SQL_ERROR = 6
-NO_RESULTS = 7
+SQL_ERROR           = 6
+NO_RESULTS          = 7
