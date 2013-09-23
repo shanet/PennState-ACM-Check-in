@@ -10,6 +10,7 @@ from DBUtil import DB
 from Threads import *
 import SharedUtils
 import Constants as c
+import Utils
 
 
 class UI(QApplication):
@@ -33,13 +34,13 @@ class LoginWnd(QMainWindow):
       self.centralWidget = QWidget()
 
       # Create logo
-      logoPix = QPixmap("images/login_logo.png")
+      logoPix = QPixmap(Utils.getAbsoluteResourcePath("images/login_logo.png"))
       self.logoImg = QLabel(self)
       self.logoImg.setPixmap(logoPix)
 
       # Create host label and text edit
       self.hostLabel = QLabel("Host:", self)
-      self.hostEdit = QLineEdit("acm.psu.edu", self)
+      self.hostEdit = QLineEdit(c.DEFAULT_HOST, self)
 
       # Create table label and table edit
       self.tableLabel = QLabel("Table:", self)
@@ -119,7 +120,7 @@ class LoginWnd(QMainWindow):
       
       # Title and icon
       self.setWindowTitle("ACM Login")
-      self.setWindowIcon(QIcon("images/login_logo.png"))
+      self.setWindowIcon(QIcon(Utils.getAbsoluteResourcePath("images/login_logo.png")))
       self.statusBar().showMessage("Not connected to server  |  Penn State ACM Chceck-in System Version " + str(c.VERSION))
 
 
@@ -204,7 +205,7 @@ class MainWnd(QMainWindow):
       
       # Title, icon, and statusbar
       self.setWindowTitle("ACM Points Check-in")
-      self.setWindowIcon(QIcon("images/login_logo.png"))
+      self.setWindowIcon(QIcon(Utils.getAbsoluteResourcePath("images/login_logo.png")))
       self.statusBar().showMessage("Connected to server  |  Penn State ACM Chceck-in System Version " + str(c.VERSION))
 
       # Init all the central widgets
@@ -257,7 +258,7 @@ class MainWnd(QMainWindow):
    def initMainMenuWidget(self):
       self.mainMenuWidget = QWidget()
 
-      logoPix = QPixmap("images/main_logo.png")
+      logoPix = QPixmap(Utils.getAbsoluteResourcePath("images/main_logo.png"))
       self.logoImg = QLabel(self)
       self.checkinBtn = QPushButton("Check-in", self)
       self.showPointsBtn = QPushButton("Show Points", self)
@@ -307,9 +308,9 @@ class MainWnd(QMainWindow):
       self.checkinWidget = QWidget()
 
       # Init widgets
-      self.cardPix = QPixmap("images/magnetic_card.png")
-      self.greenPix = QPixmap("images/green_check_mark.png")
-      self.redPix = QPixmap("images/red_x_mark.png")
+      self.cardPix = QPixmap(Utils.getAbsoluteResourcePath("images/magnetic_card.png"))
+      self.greenPix = QPixmap(Utils.getAbsoluteResourcePath("images/green_check_mark.png"))
+      self.redPix = QPixmap(Utils.getAbsoluteResourcePath("images/red_x_mark.png"))
       self.checkinImg = QLabel(self)
       self.checkinLabel = QLabel("Waiting for card swipe...")
       self.checkinBackBtn = QPushButton("Back", self)
@@ -562,7 +563,7 @@ class ConnectingWnd(QWidget):
         
    def initUI(self):
       # Create connecting image
-      connMov = QMovie("images/loading_icon.gif")
+      connMov = QMovie(Utils.getAbsoluteResourcePath("images/loading_icon.gif"))
       connMov.start()
       self.connImg = QLabel(self)
       self.connImg.setMovie(connMov)

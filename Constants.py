@@ -5,12 +5,12 @@
 # All application-wide constants
 
 # Behavoiral constants
-VERSION = "3.1.5-beta"
+VERSION = "4.0.0"
 
-DEFAULT_HOST              = "acm.psu.edu"
+DEFAULT_HOST              = "localhost"
 DEFAULT_USER              = "points"
 DEFAULT_DATABASE          = "points"
-DEFAULT_TABLE             = "points_spring_13"
+DEFAULT_TABLE             = "points_fall_13"
 DEFAULT_POINTS            = 50
 ALLOW_CHECKIN_WITHIN_HOUR = 0
 TIME_BETWEEN_CHECKINS     = 3 # In seconds
