@@ -1,7 +1,7 @@
 # -*- mode: python -*-
 import sys
 
-a = Analysis(['Check-in.py'],
+a = Analysis(['acm_check-in/Check-in.py'],
              hiddenimports=[],
              hookspath=None)
 pyz = PYZ(a.pure)
@@ -12,12 +12,12 @@ exe = EXE(pyz,
                         ('msvcr100.dll', 'C:\\Windows\\System32\\msvcr100.dll', 'BINARY')]
           if sys.platform == 'win32' else a.binaries,
           a.zipfiles,
-          a.datas + [('images/green_check_mark.png',  'images/green_check_mark.png', 'DATA'),
-                     ('images/loading_icon.gif',      'images/loading_icon.gif',     'DATA'),
-                     ('images/login_logo.png',        'images/login_logo.png',       'DATA'),
-                     ('images/magnetic_card.png',     'images/magnetic_card.png',    'DATA'),
-                     ('images/main_logo.png',         'images/main_logo.png',        'DATA'),
-                     ('images/red_x_mark.png',        'images/red_x_mark.png',       'DATA')],
+          a.datas + [('images/green_check_mark.png',  'acm_check-in/images/green_check_mark.png', 'DATA'),
+                     ('images/loading_icon.gif',      'acm_check-in/images/loading_icon.gif',     'DATA'),
+                     ('images/login_logo.png',        'acm_check-in/images/login_logo.png',       'DATA'),
+                     ('images/magnetic_card.png',     'acm_check-in/images/magnetic_card.png',    'DATA'),
+                     ('images/main_logo.png',         'acm_check-in/images/main_logo.png',        'DATA'),
+                     ('images/red_x_mark.png',        'acm_check-in/images/red_x_mark.png',       'DATA')],
           name=os.path.join('dist', 'ACM-Check-in' + ('.exe' if sys.platform == 'win32' else '')),
           debug=False,
           strip=None,
