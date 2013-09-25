@@ -6,7 +6,7 @@ Penn State ACM Check-in
 
 ### Dependencies
 
-The Penn State ACM Check-in is a Python 2.xx application.
+The Penn State ACM Check-in is a Python 2.x application.
 There are two dependencies:
    1. `PyQt` - Python bindings for QT
    1. `MySQLdb` - Python MySQL library
