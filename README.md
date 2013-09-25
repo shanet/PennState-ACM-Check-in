@@ -8,8 +8,8 @@ Penn State ACM Check-in
 
 The Penn State ACM Check-in is a Python 2.xx application.
 There are two dependencies:
-   # `PyQt` - Python bindings for QT
-   # `MySQLdb` - Python MySQL library
+   1. `PyQt` - Python bindings for QT
+   1. `MySQLdb` - Python MySQL library
 
 ### Database
 
@@ -18,10 +18,10 @@ The default host, database, table, and host are configurable in the `Constants.p
 be entered in the login screen of the application.
 
 For the database, this application expects a table with four columns:
-   # card ID        - card ID from ID card (`varchar`, `primary key`)
-   # access ID      - human-readable owner of card (`varchar`)
-   # points         - the number of points (`int`)
-   # last check-in  - the time of last check-in (`timestamp`)
+   1. card ID        - card ID from ID card (`varchar`, `primary key`)
+   1. access ID      - human-readable owner of card (`varchar`)
+   1. points         - the number of points (`int`)
+   1. last check-in  - the time of last check-in (`timestamp`)
 
 You'll probably want to change the default database information for your database in `Constants.py`.
 
