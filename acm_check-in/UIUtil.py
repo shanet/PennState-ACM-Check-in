@@ -4,7 +4,8 @@
 
 import sys
 import re
-from PyQt4.Qt import *
+from PySide.QtGui import *
+from PySide.QtCore import *
 
 from DBUtil import DB
 from Threads import *
@@ -54,6 +55,7 @@ class LoginWnd(QMainWindow):
       self.passEdit = QLineEdit(self)
       # It's a password field; hide the input.
       self.passEdit.setEchoMode(QLineEdit.Password)
+      self.passEdit.returnPressed.connect(self.preLogin)
 
       # Create login and exit buttons
       self.loginBtn = QPushButton("Login", self)
@@ -150,10 +152,7 @@ class LoginWnd(QMainWindow):
       self.connWnd.show()
 
       # Create a new dbUtil object and have it connect to the database
-      self.loginThread = LoginThread(dbHost, c.DEFAULT_DATABASE, dbTable, dbUser, dbPass)
-
-      self.connect(self.loginThread, SIGNAL("postLogin(PyQt_PyObject, PyQt_PyObject)"), self.postLogin)
-
+      self.loginThread = LoginThread(dbHost, c.DEFAULT_DATABASE, dbTable, dbUser, dbPass, self.postLogin)
       self.loginThread.start()
 
 
@@ -189,7 +188,7 @@ class MainWnd(QMainWindow):
       self.regex = re.compile(";(.+)=")
 
       # Declare sleepThread
-      self.sleepThread = SleepThread(c.TIME_BETWEEN_CHECKINS)
+      self.sleepThread = SleepThread(c.TIME_BETWEEN_CHECKINS, self.resetCheckinWidget)
 
       self.initUI()
 
@@ -258,50 +257,17 @@ class MainWnd(QMainWindow):
    def initMainMenuWidget(self):
       self.mainMenuWidget = QWidget()
 
-      logoPix = QPixmap(Utils.getAbsoluteResourcePath("images/main_logo.png"))
-      self.logoImg = QLabel(self)
-      self.checkinBtn = QPushButton("Check-in", self)
-      self.showPointsBtn = QPushButton("Show Points", self)
-      self.exitBtn = QPushButton("Exit", self)
+      checkinButton = QImageButton("Check-in", Utils.getAbsoluteResourcePath('images/magnetic_card.png'), self.showCheckinWidget, 100, self)
+      showPointsButton = QImageButton("Show Points", Utils.getAbsoluteResourcePath('images/trophy.png'), self.showPointsWidget, 100, self)
 
-      # Size the images properly
-      logoPix = logoPix.scaledToWidth(450)
-      self.logoImg.setPixmap(logoPix)
+      hbox = QHBoxLayout()
+      hbox.addStretch(1)
+      hbox.addWidget(checkinButton)
+      hbox.addSpacing(45)
+      hbox.addWidget(showPointsButton)
+      hbox.addStretch(1)
 
-      # Define button callbacks
-      self.checkinBtn.clicked.connect(self.showCheckinWidget)
-      self.showPointsBtn.clicked.connect(self.showShowPointsWidget)
-      self.exitBtn.clicked.connect(self.close)
-
-      # Configure the grid layout
-      grid = QGridLayout()
-      grid.setSpacing(10)
-
-      # Add username widgets
-      grid.addWidget(self.checkinBtn, 1, 0)
-      grid.addWidget(self.showPointsBtn, 1, 1)
-      grid.addWidget(self.exitBtn, 1, 2)
-
-      # Add grid to the hbox layout for horizontal centering
-      imgHbox = QHBoxLayout()
-      imgHbox.addStretch(1)
-      imgHbox.addWidget(self.logoImg)
-      imgHbox.addStretch(1)
-
-      btnHbox = QHBoxLayout()
-      btnHbox.addStretch(1)
-      btnHbox.addLayout(grid)
-      btnHbox.addStretch(1)
-
-      # Add grid to vbox layout for vertical centering
-      vbox = QVBoxLayout()
-      vbox.addStretch(1)
-      vbox.addLayout(imgHbox)
-      vbox.addLayout(btnHbox)
-      vbox.addStretch(1)
-        
-      # Add the completeted layout to the main menu widget
-      self.mainMenuWidget.setLayout(vbox)
+      self.mainMenuWidget.setLayout(hbox)
 
    
    def initCheckinWidget(self):
@@ -316,9 +282,9 @@ class MainWnd(QMainWindow):
       self.checkinBackBtn = QPushButton("Back", self)
 
       # Size the images properly
-      self.cardPix = self.cardPix.scaledToHeight(175)
-      self.greenPix = self.greenPix.scaledToHeight(175)
-      self.redPix = self.redPix.scaledToHeight(175)
+      self.cardPix = self.cardPix.scaledToHeight(175, Qt.SmoothTransformation)
+      self.greenPix = self.greenPix.scaledToHeight(175, Qt.SmoothTransformation)
+      self.redPix = self.redPix.scaledToHeight(175, Qt.SmoothTransformation)
 
       # Add the card image to image widget
       self.checkinImg.setPixmap(self.cardPix)
@@ -361,10 +327,7 @@ class MainWnd(QMainWindow):
 
       # Init widgets
       self.pointsTitle = QLabel("Current Points Standings")
-      self.pointsScrollArea = QScrollArea()
-      self.pointsScrollWidget = QWidget()
-      self.pointsAccessIDLabel = QLabel()
-      self.pointsPointsLabel = QLabel()
+      self.pointsTextArea = QTextEdit()
       self.pointsBackBtn = QPushButton("Back", self)
 
       # Set the font for the checkin label
@@ -374,49 +337,17 @@ class MainWnd(QMainWindow):
       self.pointsBackBtn.clicked.connect(self.closeShowPointsScreen)
 
       # Create the layout for the points scroll area
-      self.pointsAccessIDLabel.setFont(QFont("Monospace", 8, QFont.Normal))
-      self.pointsPointsLabel.setFont(QFont("Monospace", 8, QFont.Normal))
-
-      self.pointsAccessIDLabel.setMinimumSize(60, 700)
-      self.pointsPointsLabel.setMinimumSize(50, 700)
-      
-      self.pointsScrollArea.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-
-      pointsHbox = QHBoxLayout()
-      pointsHbox.addStretch(1)
-      pointsHbox.addWidget(self.pointsAccessIDLabel)
-      pointsHbox.addWidget(self.pointsPointsLabel)
-      pointsHbox.addStretch(1)
-
-      pointsVbox = QVBoxLayout()
-      pointsVbox.addLayout(pointsHbox)
-      pointsVbox.addStretch(1)
-
-      self.pointsScrollWidget.setLayout(pointsVbox)
-      self.pointsScrollArea.setWidget(self.pointsScrollWidget)
-
-      # Center the title label
-      titleHbox = QHBoxLayout()
-      titleHbox.addStretch(1)
-      titleHbox.addWidget(self.pointsTitle)
-      titleHbox.addStretch(1)
+      self.pointsTextArea.setFont(QFont("Monospace", 8, QFont.Normal))
 
       # Add widgets to vbox layout for vertical centering
       vbox = QVBoxLayout()
       vbox.addStretch(1)
-      vbox.addLayout(titleHbox)
-      vbox.addWidget(self.pointsScrollArea)
+      vbox.addWidget(self.pointsTitle, alignment=Qt.AlignCenter)
+      vbox.addWidget(self.pointsTextArea)
       vbox.addWidget(self.pointsBackBtn)
       vbox.addStretch(1)
 
-      # Add grid to the hbox layout for horizontal centering
-      hbox = QHBoxLayout()
-      hbox.addStretch(1)
-      hbox.addLayout(vbox)
-      hbox.addStretch(1)
-
-      # Add the completeted layout to the overall show points widget
-      self.showPointsWidget.setLayout(hbox)
+      self.showPointsWidget.setLayout(vbox)
 
 
    def showMainMenuWidget(self):
@@ -428,7 +359,7 @@ class MainWnd(QMainWindow):
 
       # Get the point value
       while 1:
-         pointValue, ok = QInputDialog.getText(self, "Point Value", "Point Value:")
+         pointValue, ok = QInputDialog.getText(self, "Point Value", "Point Value:", text=str(c.DEFAULT_POINTS))
 
          if ok:
             if str(pointValue).isdigit():
@@ -441,9 +372,7 @@ class MainWnd(QMainWindow):
       
       # Init the checkin thread
       # pointValue will be used in SQL queries. Sanitize it.
-      self.checkinThread = CheckinThread(self.db, SharedUtils.sanitizeInput(str(pointValue)))
-      self.connect(self.checkinThread, SIGNAL("postCardSwipe(PyQt_PyObject, PyQt_PyObject, PyQt_PyObject, PyQt_PyObject, PyQt_PyObject)"), 
-                  self.postCardSwipe)
+      self.checkinThread = CheckinThread(self.db, SharedUtils.sanitizeInput(str(pointValue)), self.postCardSwipe)
 
    
    def showShowPointsWidget(self):
@@ -458,9 +387,7 @@ class MainWnd(QMainWindow):
       
       # Init the show points thread
       # accessID will be used in SQL queries. Sanitize it.
-      self.showPointsThread = ShowPointsThread(self.db, SharedUtils.sanitizeInput(str(accessID)))
-      self.connect(self.showPointsThread, SIGNAL("setPoints(PyQt_PyObject, PyQt_PyObject, PyQt_PyObject)"), 
-                  self.setPoints)
+      self.showPointsThread = ShowPointsThread(self.db, SharedUtils.sanitizeInput(str(accessID)), self.setPoints)
       self.showPointsThread.start()
 
 
@@ -484,6 +411,9 @@ class MainWnd(QMainWindow):
          QMessageBox.critical(self, "Database Error", "WARNING! Database error: " + sqlError.args[1], QMessageBox.Ok, QMessageBox.Ok)
          # Don't bother to change UI elements or start the sleep thread, just wait for the next card
          return
+      elif checkinStatus == c.ERROR_READING_CARD:
+         self.checkinImg.setPixmap(self.redPix)
+         self.checkinLabel.setText("Error reading card. Swipe again.")
       elif checkinStatus == c.BAD_CHECKIN_TIME:
          self.checkinImg.setPixmap(self.redPix)
          self.checkinLabel.setText("You may only check-in once per hour.")
@@ -503,9 +433,7 @@ class MainWnd(QMainWindow):
 
             # Sanitize the accessID input and call the add card thread
             if ok and accessID != "":
-               self.addCardThread = AddCardThread(self.db, cardID, SharedUtils.sanitizeInput(str(accessID)), pointValue)
-               self.connect(self.addCardThread, SIGNAL("postCardSwipe(PyQt_PyObject, PyQt_PyObject, PyQt_PyObject, PyQt_PyObject, PyQt_PyObject)"), 
-                           self.postCardSwipe)
+               self.addCardThread = AddCardThread(self.db, cardID, SharedUtils.sanitizeInput(str(accessID)), pointValue, self.postCardSwipe)
                self.addCardThread.start()
          # Don't bother to change UI elements or start the sleep thread, just wait for the next card
          return
@@ -521,7 +449,6 @@ class MainWnd(QMainWindow):
       # Sleep for a few seconds before resetting the UI for the next card
       # The number of seconds is defined in the constants file
       # This must be on a separate thread since blocking the UI thread is a big no-no
-      self.connect(self.sleepThread, SIGNAL("resetCheckinWidget()"), self.resetCheckinWidget)
       self.sleepThread.start()
       
             
@@ -534,24 +461,16 @@ class MainWnd(QMainWindow):
 
    
    def setPoints(self, showPointsStatus, pointsTuple, sqlError):
-      accessIDs = ""
-      points = ""
-      
       if showPointsStatus == c.NO_RESULTS:
             QMessageBox.critical(self, "Empty Query", "The specified access ID was not found in the database", QMessageBox.Ok, QMessageBox.Ok)
             return
-      print len(pointsTuple)
       for i in range(len(pointsTuple)):
-         accessIDs += str(pointsTuple[i][0]) + "\n"
-         points += "| " + str(pointsTuple[i][1]) + "\n"
+         accessID = str(pointsTuple[i][0])
+         points = str(pointsTuple[i][1])
+         self.pointsTextArea.append(accessID + "\t" + points)
 
-      self.pointsAccessIDLabel.setText(accessIDs)
-      self.pointsPointsLabel.setText(points)
-
-      self.pointsAccessIDLabel.update()
-      self.pointsPointsLabel.update()
-
-
+      # Move the scrollbar to the top
+      self.pointsTextArea.verticalScrollBar().setValue(scrollbar.minimum())
 
 
 class ConnectingWnd(QWidget):
@@ -588,3 +507,37 @@ class ConnectingWnd(QWidget):
       centerPt = QDesktopWidget().availableGeometry().center()
       geo.moveCenter(centerPt)
       self.move(geo.topLeft())
+
+
+class QImageButton(QWidget):
+    def __init__(self, buttonText, imagePath, buttonCallback, imageSize, parent=None):
+        QWidget.__init__(self, parent)
+
+        icon = QLabel(self)
+        icon.setPixmap(QPixmap(imagePath).scaled(imageSize, imageSize, TransformationMode = Qt.SmoothTransformation))
+
+        button = QPushButton(buttonText)
+        button.clicked.connect(buttonCallback)
+
+        vbox = QVBoxLayout()
+        vbox.addStretch(1)
+        vbox.addWidget(icon, alignment=Qt.AlignHCenter)
+        vbox.addSpacing(20)
+        vbox.addWidget(button)
+        vbox.addStretch(1)
+
+        # Add some horizontal padding
+        hbox = QHBoxLayout()
+        hbox.addSpacing(10)
+        hbox.addLayout(vbox)
+        hbox.addSpacing(10)
+
+        groupBox = QGroupBox()
+        groupBox.setLayout(hbox)
+
+        hbox = QHBoxLayout()
+        hbox.addStretch(1)
+        hbox.addWidget(groupBox)
+        hbox.addStretch(1)
+
+        self.setLayout(hbox)

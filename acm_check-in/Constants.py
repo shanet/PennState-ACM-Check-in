@@ -2,10 +2,7 @@
 # 09.18.11
 # Magnetic card check-in application for Penn State ACM
 
-# All application-wide constants
-
-# Behavoiral constants
-VERSION = "4.0.0"
+VERSION = "5.0.0"
 
 DEFAULT_HOST              = "localhost"
 DEFAULT_USER              = "points"
@@ -13,7 +10,7 @@ DEFAULT_DATABASE          = "points"
 DEFAULT_TABLE             = "points_fall_13"
 DEFAULT_POINTS            = 50
 ALLOW_CHECKIN_WITHIN_HOUR = 0
-TIME_BETWEEN_CHECKINS     = 3 # In seconds
+TIME_BETWEEN_CHECKINS     = 2 # In seconds
 
 # TextUtil constants
 BACK = 10

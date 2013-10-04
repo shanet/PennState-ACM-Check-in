@@ -3,14 +3,17 @@
 # Magnetic card check-in application for Penn State ACM
 
 from time import sleep
-from PyQt4.Qt import *
+from PySide.QtCore import QThread
+from PySide.QtCore import Signal
 
 from DBUtil import DB
 import Constants as c
 
 
 class LoginThread(QThread):
-   def __init__(self, dbHost, dbDatabase, dbTable, dbUser, dbPass):
+   postLoginSignal = Signal(int, object)
+
+   def __init__(self, dbHost, dbDatabase, dbTable, dbUser, dbPass, postLoginCallback):
       super(LoginThread, self).__init__()
       self.dbHost = dbHost
       self.dbDatabase = dbDatabase
@@ -18,9 +21,8 @@ class LoginThread(QThread):
       self.dbUser = dbUser
       self.dbPass = dbPass
 
-   def __del__(self):
-      # Stop the thread if it's being deleted, but still running
-      self.quit()
+      self.postLoginSignal.connect(postLoginCallback)
+
    
    def run(self):
       # Init the db object
@@ -28,35 +30,47 @@ class LoginThread(QThread):
 
       # Connect to the remote database server
       loginStatus = db.connect()
-
-      self.emit(SIGNAL("postLogin(PyQt_PyObject, PyQt_PyObject)"), loginStatus, db)
+   
+      self.postLoginSignal.emit(loginStatus, db)
 
 
 class CheckinThread(QThread):
-   def __init__(self, db, pointValue):
+   postCardSwipeSignal = Signal(int, str, str, object, str)
+
+   def __init__(self, db, pointValue, postCardSwipeCallback):
       super(CheckinThread, self).__init__()
 
       self.db = db
       self.pointValue = str(pointValue)
       self.cardID = None
 
-   def __del__(self):
-      # Stop the thread if it's being deleted, but still running
-      self.quit()
+      self.postCardSwipeSignal.connect(postCardSwipeCallback)
+
 
    def setCardID(self, cardID):
       self.cardID = cardID
    
    def run(self):
       # Warning: setCardID() must have been called before starting this thread
+
+      # At least make sure the card ID is of the right length. Not much more validation can be done.
+      if len(self.cardID) != 16:
+         self.postCardSwipeSignal.emit(c.ERROR_READING_CARD, '', '', object(), self.pointValue)
+         return
+      
       checkinResult = self.db.checkin(self.cardID, self.pointValue)
-      self.emit(SIGNAL("postCardSwipe(PyQt_PyObject, PyQt_PyObject, PyQt_PyObject, PyQt_PyObject, PyQt_PyObject)"), 
-               checkinResult["checkinStatus"], checkinResult["accessID"], checkinResult["cardID"],
-               checkinResult["sqlError"], self.pointValue)
+
+      # Don't pass nonetype's through signals expecting an object or seg faults happen
+      if checkinResult["sqlError"] is None:
+         checkinResult["sqlError"] = object()
+
+      self.postCardSwipeSignal.emit(checkinResult["checkinStatus"], checkinResult["accessID"], checkinResult["cardID"], checkinResult["sqlError"], self.pointValue)
 
 
 class AddCardThread(QThread):
-   def __init__(self, db, cardID, accessID, pointValue):
+   cardAddedSignal = Signal(int, str, str, object, str)
+
+   def __init__(self, db, cardID, accessID, pointValue, cardAddedCallback):
       super(AddCardThread, self).__init__()
 
       self.db = db
@@ -64,46 +78,55 @@ class AddCardThread(QThread):
       self.cardID = cardID
       self.accessID = accessID
 
-   def __del__(self):
-      # Stop the thread if it's being deleted, but still running
-      self.quit()
+      self.cardAddedSignal.connect(cardAddedCallback)
+
    
    def run(self):
       addCardResult = self.db.addCard(self.cardID, self.accessID, self.pointValue)
-      self.emit(SIGNAL("postCardSwipe(PyQt_PyObject, PyQt_PyObject, PyQt_PyObject, PyQt_PyObject, PyQt_PyObject)"), 
-               addCardResult["addCardStatus"], addCardResult["accessID"], addCardResult["cardID"],
-               addCardResult["sqlError"], self.pointValue)
+
+      # Don't send nonetype's through signals
+      if addCardResult['sqlError'] is None:
+         addCardResult['sqlError'] = object()
+
+      self.cardAddedSignal.emit(addCardResult["addCardStatus"], addCardResult["accessID"], addCardResult["cardID"], addCardResult["sqlError"], self.pointValue)
 
 
 class ShowPointsThread(QThread):
-   def __init__(self, db, accessID=""):
+   showPointsSignal = Signal(int, object, object)
+
+   def __init__(self, db, accessID, showPointsCallback):
       super(ShowPointsThread, self).__init__()
 
       self.db = db
       self.accessID = accessID
+
+      self.showPointsSignal.connect(showPointsCallback)
    
-   def __del__(self):
-      # Stop the thread if it's being deleted, but still running
-      self.quit()
 
    def setAccessID(self, accessID):
       self.accessID = accessID
    
    def run(self):
       showPointsResult = self.db.showPoints(self.accessID)
-      self.emit(SIGNAL("setPoints(PyQt_PyObject, PyQt_PyObject, PyQt_PyObject)"), 
-               showPointsResult["showPointsStatus"], showPointsResult["pointsTuple"], showPointsResult["sqlError"])
+
+      # Don't send nonetype's through a signal or it gets angry and seg faults
+      if showPointsResult["sqlError"] is None:
+         showPointsResult["sqlError"] = object()
+      if showPointsResult["pointsTuple"] is None:
+         showPointsResult["pointsTuple"] = object()
+
+      self.showPointsSignal.emit(showPointsResult["showPointsStatus"], showPointsResult["pointsTuple"], showPointsResult["sqlError"])
 
 
 class SleepThread(QThread):
-   def __init__(self, time):
+   wakeupSignal = Signal()
+
+   def __init__(self, time, wakeupCallback):
       super(SleepThread, self).__init__()
 
       self.time = time
+      self.wakeupSignal.connect(wakeupCallback)
 
-   def __del__(self):
-      # Stop the thread if it's being deleted, but still running
-      self.quit()
 
    def setTime(self, time):
       self.time = time
@@ -113,6 +136,4 @@ class SleepThread(QThread):
 
    def run(self):
       sleep(self.time)
-      self.emit(SIGNAL("resetCheckinWidget()"))
-
-
+      self.wakeupSignal.emit()
