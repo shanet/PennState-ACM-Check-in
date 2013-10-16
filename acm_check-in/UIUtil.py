@@ -220,7 +220,7 @@ class MainWnd(QMainWindow):
       # Add the widgets to the main central stacked widget
       self.centralWidget.addWidget(self.mainMenuWidget)
       self.centralWidget.addWidget(self.checkinWidget)
-      self.centralWidget.addWidget(self.showPointsWidget)
+      self.centralWidget.addWidget(self.pointsWidget)
 
       # Show the main menu first
       self.showMainMenuWidget()
@@ -321,7 +321,7 @@ class MainWnd(QMainWindow):
 
    
    def initShowPointsWidget(self):
-      self.showPointsWidget = QWidget()
+      self.pointsWidget = QWidget()
 
       self.checkinThread = None
 
@@ -347,7 +347,7 @@ class MainWnd(QMainWindow):
       vbox.addWidget(self.pointsBackBtn)
       vbox.addStretch(1)
 
-      self.showPointsWidget.setLayout(vbox)
+      self.pointsWidget.setLayout(vbox)
 
 
    def showMainMenuWidget(self):
@@ -375,8 +375,8 @@ class MainWnd(QMainWindow):
       self.checkinThread = CheckinThread(self.db, SharedUtils.sanitizeInput(str(pointValue)), self.postCardSwipe)
 
    
-   def showShowPointsWidget(self):
-      self.centralWidget.setCurrentWidget(self.showPointsWidget)
+   def showPointsWidget(self):
+      self.centralWidget.setCurrentWidget(self.pointsWidget)
 
       # Get the access ID to show points for or an empty string for all access ID's
       accessID, ok = QInputDialog.getText(self, "Access ID", "Access ID (blank for all access ID\'s):")
@@ -470,7 +470,8 @@ class MainWnd(QMainWindow):
          self.pointsTextArea.append(accessID + "\t" + points)
 
       # Move the scrollbar to the top
-      self.pointsTextArea.verticalScrollBar().setValue(scrollbar.minimum())
+      scrollbar = self.pointsTextArea.verticalScrollBar()
+      scrollbar.setValue(scrollbar.minimum())
 
 
 class ConnectingWnd(QWidget):
