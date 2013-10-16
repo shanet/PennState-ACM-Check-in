@@ -376,6 +376,7 @@ class MainWnd(QMainWindow):
 
    
    def showPointsWidget(self):
+      self.pointsTextArea.clear()
       self.centralWidget.setCurrentWidget(self.pointsWidget)
 
       # Get the access ID to show points for or an empty string for all access ID's
