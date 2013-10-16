@@ -425,17 +425,14 @@ class MainWnd(QMainWindow):
          self.checkinImg.setPixmap(self.greenPix)
          self.checkinLabel.setText(str(accessID) + " +" + str(pointValue) + " points")
       elif checkinStatus == c.CARD_NOT_IN_DB:
-         # If the card is not in the DB ask to add it
-         reply = QMessageBox.question(self, "Card Not in Database", "This card was not found in the database. Add it now?",
-                                    QMessageBox.Yes | QMessageBox.No, QMessageBox.No)
-         if reply == QMessageBox.Yes:
-            # If adding new card, get the accessID associated with the card
-            accessID, ok = QInputDialog.getText(self, "Add New Card", "Access ID:")
+         # If adding new card, get the accessID associated with the card
+         accessID, ok = QInputDialog.getText(self, "Add New Card", "Card not found in database. Access ID:")
 
-            # Sanitize the accessID input and call the add card thread
-            if ok and accessID != "":
-               self.addCardThread = AddCardThread(self.db, cardID, SharedUtils.sanitizeInput(str(accessID)), pointValue, self.postCardSwipe)
-               self.addCardThread.start()
+         # Sanitize the accessID input and call the add card thread
+         if ok and accessID != "":
+            self.addCardThread = AddCardThread(self.db, cardID, SharedUtils.sanitizeInput(str(accessID)), pointValue, self.postCardSwipe)
+            self.addCardThread.start()
+
          # Don't bother to change UI elements or start the sleep thread, just wait for the next card
          return
       else:
