@@ -2,7 +2,7 @@
 # 09.18.11
 # Magnetic card check-in application for Penn State ACM
 
-VERSION = "5.0.0"
+VERSION = "5.1"
 
 DEFAULT_HOST              = "localhost"
 DEFAULT_USER              = "points"
