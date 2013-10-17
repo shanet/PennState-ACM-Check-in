@@ -188,7 +188,7 @@ class MainWnd(QMainWindow):
       self.checkingIn = False
 
       # Compile the regex for pulling the card ID from all the data on a card
-      self.regex = re.compile(";(.+)=")
+      self.regex = re.compile(";([0-9]+)=[0-9]+\?")
 
       # Declare sleepThread
       self.sleepThread = SleepThread(c.TIME_BETWEEN_CHECKINS, self.resetCheckinWidget)
@@ -231,10 +231,11 @@ class MainWnd(QMainWindow):
    
    def keyPressEvent(self, event):
       # Only look for card swipes if the checkin widget is currently shown
-      if self.centralWidget.currentWidget() == self.checkinWidget and not self.checkingIn:
+      if self.centralWidget.currentWidget() == self.checkinWidget:
          try:
             # Try to match the input to the card ID regex
-            cardID = self.regex.search(self.cardInput).group(1)
+            r =  self.regex.search(self.cardInput)
+            cardID = r.groups()[0]
 
             # A match was made so reset cardInput for the next card and set the checking
             # in flag to true
