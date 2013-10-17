@@ -185,7 +185,6 @@ class MainWnd(QMainWindow):
 
       # Init card input so it can be appended to later
       self.cardInput = ""
-      self.checkingIn = False
 
       # Compile the regex for pulling the card ID from all the data on a card
       self.regex = re.compile(";([0-9]+)=[0-9]+\?")
@@ -237,10 +236,8 @@ class MainWnd(QMainWindow):
             r =  self.regex.search(self.cardInput)
             cardID = r.groups()[0]
 
-            # A match was made so reset cardInput for the next card and set the checking
-            # in flag to true
+            # A match was made so reset cardInput for the next card
             self.cardInput = ""
-            self.checkingIn = True
 
             # Set the card ID and start the checkin thread
             # cardID is going into an SQL query; don't forget to sanitize the input
@@ -462,7 +459,6 @@ class MainWnd(QMainWindow):
             
    def resetCheckinWidget(self):
       # Reset the UI for a new card swipe
-      self.checkingIn = False
       self.checkinImg.setPixmap(self.cardPix)
       self.checkinLabel.setText("Waiting for card swipe...")
       self.checkinImg.update()
