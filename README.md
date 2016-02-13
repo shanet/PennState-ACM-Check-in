@@ -4,7 +4,7 @@ Penn State ACM Check-in
 #### Shane Tully (shane@shanetully.com)
 #### shanetully.com & acm.psu.edu
 
-**Note:** An actively maintained fork of this project exists at https://github.com/clemsonMakerspace/Magstripe_Attendance.
+**Note:** An actively maintained fork of this project exists at http://clemsonmakerspace.github.io/Magstripe_Attendance/.
 
 ### Dependencies
 
